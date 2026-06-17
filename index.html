@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes Journey · Timeline</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --line: #21262d;
+    --card: #161b22;
+    --card-hover: #1c2128;
+    --border: #30363d;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 80px 24px 60px;
+    text-align: center;
+    background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin-top: 12px;
+  }
+  .hero .badge {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* Stats */
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 32px 24px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-item .num {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--fg);
+  }
+  .stat-item .label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Timeline */
+  .timeline-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    position: relative;
+  }
+
+  .timeline-section {
+    margin-bottom: 48px;
+  }
+  .timeline-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-left: 48px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    position: relative;
+  }
+  .timeline-section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 28px;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 16px 0 16px 48px;
+    transition: background 0.2s;
+    border-radius: 8px;
+  }
+  .timeline-item:hover {
+    background: var(--card-hover);
+  }
+
+  /* Dot line */
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--line);
+  }
+  .timeline-item:first-of-type::before { top: 12px; }
+  .timeline-item:last-of-type::before { bottom: calc(100% - 20px); }
+  .timeline-section:last-child .timeline-item:last-of-type::before { display: none; }
+
+  .timeline-item .dot {
+    position: absolute;
+    left: 2px;
+    top: 20px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    z-index: 1;
+    border: 3px solid var(--bg);
+  }
+  .dot-install     { background: var(--accent); }
+  .dot-config      { background: var(--accent2); }
+  .dot-network     { background: var(--accent3); }
+  .dot-service     { background: var(--accent5); }
+  .dot-security    { background: var(--accent4); }
+  .dot-feature     { background: var(--accent2); }
+  .dot-github      { background: #fff; }
+
+  .timeline-item .date {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .timeline-item .title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .timeline-item .desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .timeline-item .desc code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.82rem;
+    background: rgba(88,166,255,0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(88,166,255,0.15);
+    color: var(--accent);
+  }
+  .timeline-item .tags {
+    margin-top: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .tag-install    { background: rgba(88,166,255,0.12); color: var(--accent); border: 1px solid rgba(88,166,255,0.25); }
+  .tag-config     { background: rgba(63,185,80,0.12);  color: var(--accent2); border: 1px solid rgba(63,185,80,0.25); }
+  .tag-network    { background: rgba(210,153,34,0.12); color: var(--accent3); border: 1px solid rgba(210,153,34,0.25); }
+  .tag-service    { background: rgba(188,140,255,0.12); color: var(--accent5); border: 1px solid rgba(188,140,255,0.25); }
+  .tag-security   { background: rgba(248,81,73,0.12);  color: var(--accent4); border: 1px solid rgba(248,81,73,0.25); }
+  .tag-feature    { background: rgba(63,185,80,0.12);  color: var(--accent2); border: 1px solid rgba(63,185,80,0.25); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 2rem; }
+    .stats { gap: 24px; }
+    .stat-item .num { font-size: 1.4rem; }
+    .timeline-item { padding-left: 40px; }
+    .timeline-section-title { padding-left: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>⚡ Hermes Journey</h1>
+  <p>Dari setup awal sampai jadi agent pribadi yang siap kerja</p>
+  <span class="badge">WSL · Ubuntu · Zero-to-Agent</span>
+</div>
+
+<div class="stats">
+  <div class="stat-item"><div class="num">20+</div><div class="label">Komponen</div></div>
+  <div class="stat-item"><div class="num">9</div><div class="label">Layanan Daemon</div></div>
+  <div class="stat-item"><div class="num">6</div><div class="label">Tools Terintegrasi</div></div>
+  <div class="stat-item"><div class="num">🔥</div><div class="label">Full Production</div></div>
+</div>
+
+<div class="timeline-wrap">
+
+  <!-- ============ INSTALASI ============ -->
+  <div class="timeline-section">
+    <div class="timeline-section-title">⚙️ Instalasi</div>
+
+    <div class="timeline-item">
+      <span class="dot dot-install"></span>
+      <div class="date">Awal — Hermes Agent</div>
+      <div class="title">Install Hermes Agent di WSL</div>
+      <div class="desc">
+        Install base Hermes Agent via <code>pip install hermes-agent</code>.
+        Python venv dibuat di <code>~/.hermes/hermes-agent/venv/</code>.
+        Source code di <code>~/.hermes/hermes-agent/</code>.
+      </div>
+      <div class="tags"><span class="tag tag-install">install</span><span class="tag tag-config">venv</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-config"></span>
+      <div class="date">Awal — Provider & Model</div>
+      <div class="title">Konfigurasi 9ROUTER & Model AI</div>
+      <div class="desc">
+        Setup provider OpenRouter via proxy pribadi <code>https://ai.jefripunza.com/v1</code>
+        dengan model <code>agent</code>. Semua LLM calls lewat endpoint sendiri.
+        9ROUTER_API_KEY disimpan di <code>~/.hermes/.env</code>.
+      </div>
+      <div class="tags"><span class="tag tag-config">provider</span><span class="tag tag-config">model</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-install"></span>
+      <div class="date">Awal — WebUI</div>
+      <div class="title">Setup Hermes WebUI</div>
+      <div class="desc">
+        Clone & deploy <code>hermes-webui</code> dari repo
+        <code>github.com/nesquena/hermes-webui</code> ke
+        <code>~/apps/hermes-webui/</code>. Berjalan di <code>0.0.0.0:8787</code>.
+      </div>
+      <div class="tags"><span class="tag tag-install">webui</span><span class="tag tag-service">frontend</span></div>
+    </div>
+  </div>
+
+  <!-- ============ SYSTEMD & AUTO-START ============ -->
+  <div class="timeline-section">
+    <div class="timeline-section-title">🔄 Systemd & Auto-Start</div>
+
+    <div class="timeline-item">
+      <span class="dot dot-service"></span>
+      <div class="date">Awal — WSL systemd</div>
+      <div class="title">Aktifkan systemd di WSL</div>
+      <div class="desc">
+        Set <code>systemd=true</code> di <code>/etc/wsl.conf</code>.
+        Aktifkan <code>loginctl enable-linger</code> biar user service jalan
+        tanpa session login.
+      </div>
+      <div class="tags"><span class="tag tag-service">systemd</span><span class="tag tag-config">wsl</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-service"></span>
+      <div class="date">Awal — Gateway & WebUI Daemon</div>
+      <div class="title">Systemd Services: Gateway + WebUI</div>
+      <div class="desc">
+        <code>hermes-gateway.service</code> — gateway daemon Hermes.<br>
+        <code>hermes-webui.service</code> — WebUI server di port 8787.<br>
+        Keduanya auto-start pas WSL boot.
+      </div>
+      <div class="tags"><span class="tag tag-service">daemon</span><span class="tag tag-service">auto-start</span></div>
+    </div>
+  </div>
+
+  <!-- ============ KNOWLEDGE BASE ============ -->
+  <div class="timeline-section">
+    <div class="timeline-section-title">🧠 Knowledge Base</div>
+
+    <div class="timeline-item">
+      <span class="dot dot-install"></span>
+      <div class="date">Tahap 2 — OpenViking</div>
+      <div class="title">Install OpenViking Memory Provider</div>
+      <div class="desc">
+        Server memory lokal pakai <code>openviking-server</code> dengan
+        embedder lokal <code>bge-small-zh-v1.5-f16</code> via llama-cpp-python.
+        Berjalan di <code>127.0.0.1:1933</code>, dimensi embedding 512.
+      </div>
+      <div class="tags"><span class="tag tag-install">memory</span><span class="tag tag-config">embedding</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-config"></span>
+      <div class="date">Tahap 2 — Integrasi Hermes</div>
+      <div class="title">Konfigurasi Memory Provider</div>
+      <div class="desc">
+        Set <code>memory.provider=openviking</code> di Hermes config.
+        Environment <code>OPENVIKING_ENDPOINT=http://127.0.0.1:1933</code>.
+        Hermes bisa search & store memory via OpenViking.
+      </div>
+      <div class="tags"><span class="tag tag-config">integrasi</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-feature"></span>
+      <div class="date">Tahap 4 — VikingBot</div>
+      <div class="title">Aktifkan Bot Mode (VikingBot)</div>
+      <div class="desc">
+        Tambah flag <code>--with-bot</code> ke OpenViking server.
+        VikingBot gateway di port <code>18790</code>.
+        Model <code>agent</code> via 9ROUTER, auto-embedding.
+        Agent loop berjalan penuh.
+      </div>
+      <div class="tags"><span class="tag tag-feature">bot</span><span class="tag tag-service">daemon</span></div>
+    </div>
+  </div>
+
+  <!-- ============ NETWORKING ============ -->
+  <div class="timeline-section">
+    <div class="timeline-section-title">🌐 Networking</div>
+
+    <div class="timeline-item">
+      <span class="dot dot-network"></span>
+      <div class="date">Tahap 3 — Cloudflare Tunnel</div>
+      <div class="title">Install & Setup Cloudflare Tunnel</div>
+      <div class="desc">
+        Install <code>cloudflared</code> binary via curl.
+        Tunnel ID: <code>9c46bad2-7c86-4621-bb7e-e06aee36aa99</code>.
+        Token disimpan di <code>~/.cloudflared/tunnel-token</code>.
+        Systemd service <code>cloudflared.service</code> — auto-start.
+      </div>
+      <div class="tags"><span class="tag tag-network">tunnel</span><span class="tag tag-service">cloudflare</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-network"></span>
+      <div class="date">Tahap 3 — Domain & DNS</div>
+      <div class="title">Konfigurasi Domain di Cloudflare</div>
+      <div class="desc">
+        Domain <code>ai.jefripunza.com</code> pointing ke tunnel.
+        Cloudflare Dashboard handle hostname routing.
+        Service bisa diakses dari luar via domain.
+      </div>
+      <div class="tags"><span class="tag tag-network">dns</span><span class="tag tag-network">domain</span></div>
+    </div>
+  </div>
+
+  <!-- ============ SECURITY ============ -->
+  <div class="timeline-section">
+    <div class="timeline-section-title">🔒 Security Layer</div>
+
+    <div class="timeline-item">
+      <span class="dot dot-security"></span>
+      <div class="date">Tahap 3 — Go Auth Proxy</div>
+      <div class="title">Reverse Proxy dengan Basic Auth (Go)</div>
+      <div class="desc">
+        Build reverse proxy di Go: port <code>8888</code> → WebUI <code>8787</code>,
+        port <code>8889</code> → OpenViking <code>1933</code>.
+        Basic Auth dari <code>auth.json</code> — hot-reload (bisa edit tanpa restart).
+        Source disimpan di <code>~/apps/hermes-proxy/main.go</code>.
+      </div>
+      <div class="tags"><span class="tag tag-security">auth</span><span class="tag tag-service">proxy</span><span class="tag tag-feature">golang</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-security"></span>
+      <div class="date">Tahap 3 — Fix CORS</div>
+      <div class="title">CORS Headers & Host Forwarding</div>
+      <div class="desc">
+        Fix <code>Cross-origin mismatch</code> dengan preserve <code>req.Host</code>
+        di Go proxy. Tambah CORS headers: <code>Access-Control-Allow-Origin: *</code>.
+        WebUI set <code>HERMES_WEBUI_TRUST_FORWARDED_HOST=1</code>.
+      </div>
+      <div class="tags"><span class="tag tag-security">cors</span><span class="tag tag-config">fix</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-security"></span>
+      <div class="date">Tahap 3 — Dual Proxy Services</div>
+      <div class="title">Systemd: Proxy WebUI + Proxy OpenViking</div>
+      <div class="desc">
+        <code>hermes-proxy.service</code> — port 8888 → WebUI.<br>
+        <code>hermes-proxy-openviking.service</code> — port 8889 → OpenViking.
+        Keduanya auto-start, basic auth sama.
+      </div>
+      <div class="tags"><span class="tag tag-service">daemon</span><span class="tag tag-security">auth</span></div>
+    </div>
+  </div>
+
+  <!-- ============ INTEGRASI ============ -->
+  <div class="timeline-section">
+    <div class="timeline-section-title">🔗 Integrasi & Tools</div>
+
+    <div class="timeline-item">
+      <span class="dot dot-github"></span>
+      <div class="date">18 Juni 2026 — GitHub</div>
+      <div class="title">Setup GitHub Authentication</div>
+      <div class="desc">
+        HTTPS auth via Personal Access Token (fine-grained).
+        Git identity: <code>Jefri Herdi Triyanto</code> /
+        <code>jefripunza@gmail.com</code>. Credential store persistent.
+        GITHUB_TOKEN di <code>.env</code> untuk API calls.
+      </div>
+      <div class="tags"><span class="tag tag-install">auth</span><span class="tag tag-feature">git</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-github"></span>
+      <div class="date">18 Juni 2026 — Test Repo</div>
+      <div class="title">Buat Repo & GitHub Pages</div>
+      <div class="desc">
+        Repo <code>test-from-hermes</code> berisi dokumentasi semua skill
+        Hermes Agent dalam markdown. Push dari WSL via terminal.
+        Enable GitHub Pages untuk static hosting.
+      </div>
+      <div class="tags"><span class="tag tag-feature">pages</span><span class="tag tag-feature">docs</span></div>
+    </div>
+  </div>
+
+  <!-- ============ FINAL ============ -->
+  <div class="timeline-section">
+    <div class="timeline-section-title">🏁 System Overview</div>
+
+    <div class="timeline-item">
+      <span class="dot dot-service"></span>
+      <div class="date">Sekarang — Running</div>
+      <div class="title">Semua Service Berjalan</div>
+      <div class="desc">
+        <strong>Port Mapping:</strong><br>
+        <code>8787</code> — Hermes WebUI (langsung)<br>
+        <code>8888</code> — Hermes WebUI via Go Proxy (Basic Auth)<br>
+        <code>8889</code> — OpenViking via Go Proxy (Basic Auth)<br>
+        <code>1933</code> — OpenViking Server + Embedding<br>
+        <code>18790</code> — VikingBot Gateway<br>
+        <code>20241</code> — Cloudflare Tunnel Metrics
+      </div>
+      <div class="tags"><span class="tag tag-service">production</span></div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="dot dot-feature"></span>
+      <div class="date">Sekarang — Aktif</div>
+      <div class="title">Systemd Daemons (Auto-Start)</div>
+      <div class="desc">
+        <code>hermes-gateway.service</code> — Gateway Hermes<br>
+        <code>hermes-webui.service</code> — WebUI Frontend<br>
+        <code>hermes-openviking.service</code> — Knowledge Base<br>
+        <code>hermes-proxy.service</code> — Auth Proxy WebUI<br>
+        <code>hermes-proxy-openviking.service</code> — Auth Proxy OpenViking<br>
+        <code>cloudflared.service</code> — Tunnel Cloudflare
+      </div>
+      <div class="tags"><span class="tag tag-service">daemon</span><span class="tag tag-service">systemd</span></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Built with ⚡ by <a href="https://github.com/jefripunza">jefripunza</a> ·
+  Hermes Agent · WSL · 2026
+</div>
+
+</body>
+</html>
