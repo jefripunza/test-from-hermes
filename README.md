@@ -1,13 +1,6 @@
 # Hermes Agent Skills
 
-Total: **94** skills, 15 kategori
-
-## 📂 apple (5)
-- **[apple-notes](skills/apple/apple-notes.md)** — Manage Apple Notes via memo CLI: create, search, edit.
-- **[apple-reminders](skills/apple/apple-reminders.md)** — Apple Reminders via remindctl: add, list, complete.
-- **[findmy](skills/apple/findmy.md)** — Track Apple devices/AirTags via FindMy.app on macOS.
-- **[imessage](skills/apple/imessage.md)** — 
-- **[macos-computer-use](skills/apple/macos-computer-use.md)** — 
+Total: **89** skills, 14 kategori
 
 ## 🤖 autonomous-ai-agents (5)
 - **[claude-code](skills/autonomous-ai-agents/claude-code.md)** — Delegate coding to Claude Code CLI (features, PRs).
